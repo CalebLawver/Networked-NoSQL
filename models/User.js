@@ -5,31 +5,44 @@ var emailValidator = function(email) {
     return mail.test(email);
 }
 
-const UserSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: 'A username is required!',
-        trim: true
+const UserSchema = new Schema(
+    {
+        username: {
+            type: String,
+            unique: true,
+            required: 'A username is required!',
+            trim: true
+        },
+        email: {
+            type: String,
+            unique: true,
+            required: 'An email is required!',
+            validate: [emailValidator, 'Please input a valid email address']
+        }, 
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Thought'
+            }
+        ],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ]
     },
-    email: {
-        type: String,
-        unique: true,
-        required: 'An email is required!',
-        validate: [emailValidator, 'Please input a valid email address']
-    }, 
-    thoughts: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Thought'
-        }
-    ],
-    friends: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ]
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true,
+        },
+        id: false
+    }
+);
+
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
 });
 
 const User = model('User', UserSchema);
