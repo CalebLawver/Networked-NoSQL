@@ -77,7 +77,9 @@ const thoughtController = {
             { $addToSet: { reactions: body } },
             { new: true }
         )
-            .then((dbThoughtData) => {
+            .populate({ path: 'reactions', select: '-__v' })
+            .select('-__v')
+            .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({ message: 'No thought found with this ID.' });
                     return;
@@ -93,8 +95,14 @@ const thoughtController = {
             { $pull: { reactions: { reactionId: params.reactionId } } },
             { new: true }
         )
-            .then((dbThoughtData) => res.json(dbThoughtData))
-            .catch(err => res.status(400).json(err));
+        .then(dbThoughtData => {
+            if (!dbThoughtData) {
+                res.status(404).json({ message: 'No thought with this ID.' });
+                return;
+            }
+            res.json(dbThoughtData);
+        })
+        .catch(err => res.status(400).json(err));
     },
 };
 
