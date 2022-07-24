@@ -16,3 +16,5 @@
 * Then I am able to successfully create and delete reactions to thoughts and add and remove friends to a user's friend list
 
 ## Walkthrough Video!
+* I couldn't get reactions to delete in the video. I have since fixed the issue
+* https://drive.google.com/file/d/17sX-PkPELalXQu1daFKVcClNsEj50uRZ/view
